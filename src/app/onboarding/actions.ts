@@ -1,7 +1,6 @@
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
-import { redirect } from "next/navigation";
 
 export async function setUserRole(role: 'creator' | 'participant') {
     const supabase = await createClient();
@@ -16,5 +15,5 @@ export async function setUserRole(role: 'creator' | 'participant') {
 
     if (error) throw error;
 
-    redirect('/dashboard');
+    return { success: true };
 }

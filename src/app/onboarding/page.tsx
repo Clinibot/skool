@@ -14,9 +14,8 @@ export default function OnboardingPage() {
         setLoading(role);
         try {
             await setUserRole(role);
-        } catch (error: any) {
-            // NEXT_REDIRECT is thrown internally by redirect() — let it propagate
-            if (error?.digest?.startsWith('NEXT_REDIRECT')) throw error;
+            window.location.href = '/dashboard';
+        } catch (error) {
             console.error(error);
             setLoading(null);
         }
