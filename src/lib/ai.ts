@@ -1,6 +1,6 @@
 export async function transcribeAudio(file: Blob) {
-    const apiKey = process.env.GROQ_API_KEY;
-    if (!apiKey) throw new Error("GROQ_API_KEY not configured");
+    const apiKey = process.env.GROQ_API_KEY || process.env.groq;
+    if (!apiKey) throw new Error("GROQ_API_KEY or 'groq' not configured in Vercel");
 
     const formData = new FormData();
     formData.append("file", file, "audio.mp3");
@@ -25,8 +25,8 @@ export async function transcribeAudio(file: Blob) {
 }
 
 export async function generateLessonContent(transcription: string) {
-    const apiKey = process.env.DEEPSEEK_API_KEY;
-    if (!apiKey) throw new Error("DEEPSEEK_API_KEY not configured");
+    const apiKey = process.env.DEEPSEEK_API_KEY || process.env.deepseek;
+    if (!apiKey) throw new Error("DEEPSEEK_API_KEY or 'deepseek' not configured in Vercel");
 
     const prompt = `
     Analyze the following transcript from a video masterclass and generate:
