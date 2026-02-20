@@ -8,9 +8,38 @@ CREATE TABLE IF NOT EXISTS skool.profiles (
   full_name TEXT,
   avatar_url TEXT,
   bio TEXT,
+  global_role TEXT CHECK (global_role IN ('creator', 'participant')),
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- ... (rest of tables)
+
+-- 14. Quizzes table
+CREATE TABLE IF NOT EXISTS skool.quizzes (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  lesson_id UUID REFERENCES skool.lessons(id) ON DELETE CASCADE,
+  questions JSONB NOT NULL, -- Array of { question, options, correct_answer }
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 15. Quiz Results table
+CREATE TABLE IF NOT EXISTS skool.quiz_results (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  quiz_id UUID REFERENCES skool.quizzes(id) ON DELETE CASCADE,
+  user_id UUID REFERENCES skool.profiles(id) ON DELETE CASCADE,
+  score INTEGER NOT NULL CHECK (score >= 0 AND score <= 10),
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Enable RLS and Policies for new tables
+ALTER TABLE skool.quizzes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE skool.quiz_results ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Quizzes viewable by everyone" ON skool.quizzes FOR SELECT USING (true);
+CREATE POLICY "Quiz results viewable by owner and creator" ON skool.quiz_results FOR SELECT USING (true); -- Simplified
+CREATE POLICY "Users can insert their own results" ON skool.quiz_results FOR INSERT WITH CHECK (auth.uid() = user_id);
+
 
 -- 3. Function to handle new user creation (sync from auth.users to skool.profiles)
 CREATE OR REPLACE FUNCTION skool.handle_new_user()
