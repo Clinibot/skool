@@ -2,8 +2,9 @@
 
 import { useState, useEffect, useRef } from "react";
 import { createClient } from "@/utils/supabase/client";
-import { Send, BookOpen, FileText, ChevronDown, ChevronUp } from "lucide-react";
+import { Send, BookOpen, FileText, ChevronDown, ChevronUp, Bot, Sparkles } from "lucide-react";
 import Link from "next/link";
+import { sendForoMensaje } from "@/app/dashboard/clases/actions";
 
 interface AulaContentProps {
     aula: any;
@@ -47,11 +48,15 @@ export function AulaContent({ aula, profile, userId, mensajesIniciales, miExamen
         e.preventDefault();
         if (!input.trim() || sending) return;
         setSending(true);
-        await supabase.from('mensajes').insert({
-            aula_id: aula.id, tipo: 'foro', autor_id: userId, contenido: input.trim(),
-        });
-        setInput("");
-        setSending(false);
+        try {
+            await sendForoMensaje(aula.id, input.trim());
+            setInput("");
+        } catch (err) {
+            console.error(err);
+            alert("Error al enviar mensaje");
+        } finally {
+            setSending(false);
+        }
     };
 
     const submitExamen = async () => {
@@ -77,9 +82,31 @@ export function AulaContent({ aula, profile, userId, mensajesIniciales, miExamen
                     <span className="text-[10px] uppercase tracking-[0.3em] text-zinc-500 font-black">Plan de Estudios</span>
                     <BookOpen className="w-4 h-4 text-indigo-500/50" />
                 </div>
-                <div className="flex-1 overflow-y-auto p-4 space-y-2">
-                    {/* Basic parsing of schema for the sidebar */}
-                    <div className="group relative px-6 py-4 rounded-3xl bg-white/[0.05] border border-white/10 shadow-lg shadow-indigo-500/5 cursor-default">
+                <div className="flex-1 overflow-y-auto p-4 space-y-8">
+                    {/* Assigned AI Professor Section */}
+                    {aula.profesores_ia && (Array.isArray(aula.profesores_ia) ? aula.profesores_ia[0] : aula.profesores_ia) && (
+                        <div className="px-4 space-y-4">
+                            <span className="text-[9px] uppercase tracking-[0.2em] text-zinc-600 font-bold">Mentor Asignado</span>
+                            <div className="p-5 rounded-[28px] bg-indigo-500/[0.03] border border-indigo-500/10 backdrop-blur-sm group hover:border-indigo-500/30 transition-all duration-500">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-2xl shadow-xl group-hover:scale-110 group-hover:rotate-3 transition-all">
+                                        {(Array.isArray(aula.profesores_ia) ? aula.profesores_ia[0] : aula.profesores_ia).avatar_emoji || '🤖'}
+                                    </div>
+                                    <div>
+                                        <p className="text-[11px] font-black text-white uppercase tracking-tight">{(Array.isArray(aula.profesores_ia) ? aula.profesores_ia[0] : aula.profesores_ia).nombre}</p>
+                                        <div className="flex items-center gap-1.5 mt-1">
+                                            <Sparkles className="w-2.5 h-2.5 text-indigo-400" />
+                                            <p className="text-[9px] text-indigo-400 uppercase font-black tracking-widest leading-none">AI Mentor</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p className="mt-4 text-[10px] text-zinc-500 font-light leading-relaxed italic">"Resolveré tus dudas en el foro utilizando el contenido de esta lección."</p>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Lesson Item */}
+                    <div className="group relative px-6 py-4 rounded-3xl bg-white/[0.05] border border-white/10 shadow-lg shadow-indigo-500/5 cursor-default mx-4">
                         <div className="flex items-center gap-3 mb-2">
                             <div className="w-2 h-2 rounded-full bg-indigo-500 shadow-[0_0_8px_rgba(99,102,241,0.6)]" />
                             <span className="text-xs font-black text-white uppercase tracking-tight">{aula.nombre}</span>
