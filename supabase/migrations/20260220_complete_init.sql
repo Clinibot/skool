@@ -36,8 +36,13 @@ CREATE TABLE IF NOT EXISTS skool.quiz_results (
 ALTER TABLE skool.quizzes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE skool.quiz_results ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Quizzes viewable by everyone" ON skool.quizzes;
 CREATE POLICY "Quizzes viewable by everyone" ON skool.quizzes FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Quiz results viewable by owner and creator" ON skool.quiz_results;
 CREATE POLICY "Quiz results viewable by owner and creator" ON skool.quiz_results FOR SELECT USING (true); -- Simplified
+
+DROP POLICY IF EXISTS "Users can insert their own results" ON skool.quiz_results;
 CREATE POLICY "Users can insert their own results" ON skool.quiz_results FOR INSERT WITH CHECK (auth.uid() = user_id);
 
 
@@ -48,7 +53,10 @@ BEGIN
   INSERT INTO skool.profiles (id, username, full_name, avatar_url)
   VALUES (
     NEW.id,
-    COALESCE(NEW.raw_user_meta_data->>'username', split_part(NEW.email, '@', 1)),
+    COALESCE(
+      NEW.raw_user_meta_data->>'username', 
+      COALESCE(split_part(NEW.email, '@', 1), 'user') || '-' || substr(NEW.id::text, 1, 8)
+    ),
     NEW.raw_user_meta_data->>'full_name',
     NEW.raw_user_meta_data->>'avatar_url'
   );
@@ -127,9 +135,16 @@ BEGIN
 END;
 $$ language 'plpgsql';
 
+DROP TRIGGER IF EXISTS update_profiles_updated_at ON skool.profiles;
 CREATE TRIGGER update_profiles_updated_at BEFORE UPDATE ON skool.profiles FOR EACH ROW EXECUTE PROCEDURE skool.update_updated_at_column();
+
+DROP TRIGGER IF EXISTS update_communities_updated_at ON skool.communities;
 CREATE TRIGGER update_communities_updated_at BEFORE UPDATE ON skool.communities FOR EACH ROW EXECUTE PROCEDURE skool.update_updated_at_column();
+
+DROP TRIGGER IF EXISTS update_courses_updated_at ON skool.courses;
 CREATE TRIGGER update_courses_updated_at BEFORE UPDATE ON skool.courses FOR EACH ROW EXECUTE PROCEDURE skool.update_updated_at_column();
+
+DROP TRIGGER IF EXISTS update_lessons_updated_at ON skool.lessons;
 CREATE TRIGGER update_lessons_updated_at BEFORE UPDATE ON skool.lessons FOR EACH ROW EXECUTE PROCEDURE skool.update_updated_at_column();
 
 -- 11. Indexes
@@ -148,12 +163,25 @@ ALTER TABLE skool.courses ENABLE ROW LEVEL SECURITY;
 ALTER TABLE skool.modules ENABLE ROW LEVEL SECURITY;
 ALTER TABLE skool.lessons ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Public profiles are viewable by everyone" ON skool.profiles;
 CREATE POLICY "Public profiles are viewable by everyone" ON skool.profiles FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Users can update their own profile" ON skool.profiles;
 CREATE POLICY "Users can update their own profile" ON skool.profiles FOR UPDATE USING (auth.uid() = id);
+
+DROP POLICY IF EXISTS "Communities are viewable by everyone" ON skool.communities;
 CREATE POLICY "Communities are viewable by everyone" ON skool.communities FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Owners can update their communities" ON skool.communities;
 CREATE POLICY "Owners can update their communities" ON skool.communities FOR UPDATE USING (auth.uid() = owner_id);
+
+DROP POLICY IF EXISTS "Memberships are viewable by everyone" ON skool.memberships;
 CREATE POLICY "Memberships are viewable by everyone" ON skool.memberships FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Users can join communities" ON skool.memberships;
 CREATE POLICY "Users can join communities" ON skool.memberships FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+DROP POLICY IF EXISTS "Courses are viewable by everyone" ON skool.courses;
 CREATE POLICY "Courses are viewable by everyone" ON skool.courses FOR SELECT USING (true);
 
 -- 13. Security Helper Function
