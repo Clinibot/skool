@@ -18,23 +18,34 @@ export default async function DashboardPage() {
     const profile = profileData?.[0] ?? null;
     if (!profile?.global_role) redirect("/onboarding");
 
-    // Fetch communities the user belongs to
-    const { data: memberships } = await supabase
-        .from('memberships')
-        .select('*, communities(*)')
-        .eq('user_id', user!.id);
+    // Fetch communities the user belongs to — wrapped in try/catch so schema errors don't 500
+    let communities: any[] = [];
+    let aulas: any[] = [];
+    try {
+        const { data: memberships, error: membError } = await supabase
+            .from('memberships')
+            .select('*, communities(*)')
+            .eq('user_id', user!.id);
 
-    const communities = memberships?.map((m: any) => m.communities).filter(Boolean) || [];
+        if (membError) console.error('[dashboard] memberships error:', membError);
+        communities = memberships?.map((m: any) => m.communities).filter(Boolean) || [];
+    } catch (e) {
+        console.error('[dashboard] memberships query crashed:', e);
+    }
 
     // ── CREATOR VIEW: show hallway (aulas) ──────────────────────────────────
     if (profile.global_role === 'creator') {
-        let aulas: any[] = [];
-        if (communities.length > 0) {
-            const { data } = await supabase
-                .from('aulas')
-                .select('*')
-                .in('community_id', communities.map((c: any) => c.id));
-            aulas = data || [];
+        let creatorAulas: any[] = [];
+        try {
+            if (communities.length > 0) {
+                const { data } = await supabase
+                    .from('aulas')
+                    .select('*')
+                    .in('community_id', communities.map((c: any) => c.id));
+                creatorAulas = data || [];
+            }
+        } catch (e) {
+            console.error('[dashboard] aulas query crashed:', e);
         }
 
         return (
@@ -51,7 +62,7 @@ export default async function DashboardPage() {
                             + Nueva Aula
                         </Link>
                     </div>
-                    {aulas.length === 0 ? (
+                    {creatorAulas.length === 0 ? (
                         <div className="flex flex-col items-center justify-center py-32 text-center">
                             <div className="text-6xl mb-6">🏫</div>
                             <h2 className="text-xl font-light text-zinc-400 mb-3">El pasillo está vacío</h2>
@@ -62,7 +73,7 @@ export default async function DashboardPage() {
                         </div>
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {aulas.map((aula: any) => (
+                            {creatorAulas.map((aula: any) => (
                                 <Link key={aula.id} href={`/dashboard/clases/${aula.id}`}>
                                     <div className="relative h-64 rounded-[28px] border border-white/5 bg-white/[0.02] p-8 group hover:border-indigo-500/40 transition-all cursor-pointer overflow-hidden">
                                         <div className={`absolute top-0 right-0 w-40 h-40 blur-[60px] -translate-y-1/2 translate-x-1/2 transition-colors ${aula.is_active ? 'bg-indigo-500/30' : 'bg-white/5 group-hover:bg-indigo-500/15'}`} />
