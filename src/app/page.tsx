@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Users, GraduationCap, Layout, ArrowRight, Zap, Shield, Star } from "lucide-react";
+import Link from "next/link";
 
 export default function LandingPage() {
   return (
@@ -13,16 +14,16 @@ export default function LandingPage() {
             <div className="w-10 h-10 bg-gradient-to-tr from-indigo-600 to-violet-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/20">
               <Zap className="w-6 h-6 text-white fill-white" />
             </div>
-            <span className="text-xl font-bold tracking-tight">Clinibot <span className="text-indigo-500">Skool</span></span>
+            <span className="text-xl font-bold tracking-tight">Saby <span className="text-indigo-500">Skool</span></span>
           </div>
           <div className="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-400">
             <a href="#" className="hover:text-white transition-colors">Features</a>
             <a href="#" className="hover:text-white transition-colors">Pricing</a>
             <a href="#" className="hover:text-white transition-colors">Testimonials</a>
           </div>
-          <button className="px-6 py-2.5 bg-white text-black rounded-full font-semibold text-sm hover:bg-zinc-200 transition-all shadow-xl shadow-white/5">
+          <Link href="/register" className="px-6 py-2.5 bg-white text-black rounded-full font-semibold text-sm hover:bg-zinc-200 transition-all shadow-xl shadow-white/5">
             Get Started
-          </button>
+          </Link>
         </div>
       </nav>
 
@@ -47,10 +48,10 @@ export default function LandingPage() {
               Everything you love about Skool, reimagined with a high-end interface, powerful automation, and deep customization.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <button className="w-full sm:w-auto px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-bold text-lg transition-all flex items-center justify-center gap-2 shadow-2xl shadow-indigo-600/30 group">
+              <Link href="/register" className="w-full sm:w-auto px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-bold text-lg transition-all flex items-center justify-center gap-2 shadow-2xl shadow-indigo-600/30 group">
                 Create My Community
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </button>
+              </Link>
               <button className="w-full sm:w-auto px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 text-white rounded-2xl font-bold text-lg transition-all">
                 Watch Demo
               </button>
@@ -135,9 +136,9 @@ export default function LandingPage() {
         <div className="max-w-5xl mx-auto bg-gradient-to-br from-indigo-600 to-violet-700 rounded-[40px] p-12 md:p-20 text-center relative overflow-hidden shadow-2xl shadow-indigo-500/20">
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 blur-[80px] -translate-y-1/2 translate-x-1/2" />
           <h2 className="text-4xl md:text-5xl font-black mb-8">Ready to elevate your community?</h2>
-          <button className="px-10 py-5 bg-white text-black rounded-3xl font-bold text-xl hover:scale-105 transition-transform">
+          <Link href="/register" className="inline-block px-10 py-5 bg-white text-black rounded-3xl font-bold text-xl hover:scale-105 transition-transform">
             Join our Early Access
-          </button>
+          </Link>
         </div>
       </section>
 
@@ -145,10 +146,10 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto flex flex-col md:row items-center justify-between gap-8">
           <div className="flex items-center gap-2">
             <Zap className="w-5 h-5 text-indigo-500 fill-indigo-500" />
-            <span className="font-bold">Clinibot Skool</span>
+            <span className="font-bold">Saby Skool</span>
           </div>
           <div className="text-zinc-500 text-sm">
-            © 2026 Clinibot Skool. All premium rights reserved.
+            © 2026 Saby Skool. All premium rights reserved.
           </div>
         </div>
       </footer>
