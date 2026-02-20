@@ -2,11 +2,15 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Upload, Video, FileText, CheckCircle2, ChevronRight, Play, Award, Sparkles } from "lucide-react";
+import { Upload, Video, FileText, CheckCircle2, ChevronRight, Play, Award, Sparkles, Loader2 } from "lucide-react";
+import { submitQuizResult } from "./actions";
 
 export default function ClassroomPage() {
     const [step, setStep] = useState(1); // 1: Idle, 2: Uploading, 3: Processing, 4: Ready
     const [activeTab, setActiveTab] = useState("content");
+    const [quizSubmitted, setQuizSubmitted] = useState(false);
+    const [submittingQuiz, setSubmittingQuiz] = useState(false);
+    const [score, setScore] = useState(0);
 
     const startSimulation = () => {
         setStep(2);
@@ -14,9 +18,30 @@ export default function ClassroomPage() {
         setTimeout(() => setStep(4), 5000);
     };
 
+    const handleQuizSubmit = async () => {
+        setSubmittingQuiz(true);
+        // Simulate scoring logic (e.g., 8/10)
+        const finalScore = 8;
+        setScore(finalScore);
+
+        try {
+            // In a real app, quizId would come from the generated quiz in DB
+            // For now we use a dummy UUID if possible or just skip the DB part for the mock
+            // await submitQuizResult("dummy-uuid", finalScore); 
+
+            setTimeout(() => {
+                setQuizSubmitted(true);
+                setSubmittingQuiz(false);
+            }, 1500);
+        } catch (error) {
+            console.error(error);
+            setSubmittingQuiz(false);
+        }
+    };
+
     return (
         <div className="min-h-screen bg-[#0a0a0b] text-white flex">
-            {/* Sidebar Mockup (Static for now) */}
+            {/* Sidebar Mockup */}
             <aside className="w-64 border-r border-white/5 bg-[#0a0a0b] p-6 hidden md:block">
                 <div className="mb-10 opacity-50 uppercase text-[10px] tracking-[0.3em] font-bold">Classroom</div>
                 <div className="space-y-4">
@@ -40,13 +65,6 @@ export default function ClassroomPage() {
                         <span>Classroom</span>
                         <ChevronRight className="w-4 h-4" />
                         <span className="text-white">New Lesson</span>
-                    </div>
-                    <div className="flex items-center gap-4">
-                        <div className="flex -space-x-2">
-                            {[1, 2, 3].map(i => (
-                                <div key={i} className="w-8 h-8 rounded-full border-2 border-[#0a0a0b] bg-zinc-800" />
-                            ))}
-                        </div>
                     </div>
                 </header>
 
@@ -77,13 +95,8 @@ export default function ClassroomPage() {
                                 exit={{ opacity: 0 }}
                                 className="h-[500px] flex flex-col items-center justify-center"
                             >
-                                <div className="relative w-24 h-24 mb-8">
-                                    <div className="absolute inset-0 border-4 border-indigo-500/20 rounded-full" />
-                                    <motion.div
-                                        className="absolute inset-0 border-4 border-t-indigo-500 rounded-full shadow-[0_0_20px_rgba(99,102,241,0.5)]"
-                                        animate={{ rotate: 360 }}
-                                        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                                    />
+                                <div className="relative w-24 h-24 mb-8 text-indigo-500">
+                                    <Loader2 className="w-full h-full animate-spin" />
                                 </div>
                                 <h2 className="text-2xl font-light tracking-[0.2em] uppercase mb-2">
                                     {step === 2 ? "Uploading..." : "AI Processing..."}
@@ -99,22 +112,9 @@ export default function ClassroomPage() {
                                 animate={{ opacity: 1, y: 0 }}
                                 className="space-y-8"
                             >
-                                {/* Video Player Mockup */}
                                 <div className="aspect-video bg-zinc-900 rounded-[32px] border border-white/5 relative overflow-hidden group">
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-8">
-                                        <div className="w-full flex items-center justify-between">
-                                            <div className="flex gap-4">
-                                                <Play className="w-6 h-6 fill-white" />
-                                                <div className="h-1.5 w-64 bg-white/20 rounded-full self-center">
-                                                    <div className="h-full w-1/3 bg-indigo-500 rounded-full" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
                                     <div className="w-full h-full flex items-center justify-center">
-                                        <div className="w-20 h-20 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center group-hover:scale-110 transition-transform">
-                                            <Play className="w-8 h-8 fill-white ml-1" />
-                                        </div>
+                                        <Play className="w-12 h-12 fill-white opacity-20" />
                                     </div>
                                     <div className="absolute top-6 left-6 px-4 py-2 rounded-xl bg-indigo-600 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2">
                                         <Sparkles className="w-3 h-3 fill-white" />
@@ -122,7 +122,6 @@ export default function ClassroomPage() {
                                     </div>
                                 </div>
 
-                                {/* Navigation Tabs */}
                                 <div className="flex gap-8 border-b border-white/5 pb-1">
                                     {["content", "outline", "quiz"].map(tab => (
                                         <button
@@ -138,54 +137,80 @@ export default function ClassroomPage() {
                                     ))}
                                 </div>
 
-                                {/* Dynamic Content area */}
                                 <div className="min-h-[300px]">
                                     {activeTab === "content" && (
-                                        <div className="space-y-6">
+                                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
                                             <h3 className="text-2xl font-light">Lesson Summary</h3>
                                             <p className="text-zinc-400 leading-relaxed font-light">
-                                                This session covers the foundational principles of community architecture. Our AI has identified key segments regarding membership psychology, engagement loops, and premium branding strategies.
+                                                Our AI has analyzed your 45-minute masterclass. The core focus is on <strong>Community Psychology</strong> and the <strong>Value-First Loop</strong>. You'll find specific actionable steps in the outline.
                                             </p>
-                                        </div>
+                                        </motion.div>
                                     )}
                                     {activeTab === "outline" && (
-                                        <div className="space-y-4">
-                                            {[1, 2, 3, 4].map(i => (
-                                                <div key={i} className="flex gap-6 p-6 rounded-2xl bg-white/[0.02] border border-white/5">
-                                                    <div className="text-indigo-500 font-bold">0{i}:00</div>
+                                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
+                                            {[1, 2, 3].map(i => (
+                                                <div key={i} className="flex gap-6 p-6 rounded-2xl bg-white/[0.02] border border-white/5 group hover:border-indigo-500/20 transition-all">
+                                                    <div className="text-indigo-500 font-bold font-mono">0{i}:00</div>
                                                     <div>
-                                                        <div className="font-bold text-sm mb-1 uppercase tracking-tight">Key Concept {i}</div>
-                                                        <div className="text-xs text-zinc-500 font-light">AI extracted insights regarding community scaling.</div>
+                                                        <div className="font-bold text-sm mb-1 uppercase tracking-tight">Key Learning Point {i}</div>
+                                                        <div className="text-xs text-zinc-500 font-light italic">Detailed AI extraction concerning module {i} architecture.</div>
                                                     </div>
                                                 </div>
                                             ))}
-                                        </div>
+                                        </motion.div>
                                     )}
                                     {activeTab === "quiz" && (
-                                        <div className="p-8 rounded-[32px] bg-gradient-to-br from-indigo-600/10 to-transparent border border-indigo-500/20">
-                                            <div className="flex justify-between items-start mb-8">
-                                                <div>
-                                                    <h3 className="text-xl font-bold mb-2">Knowledge Assessment</h3>
-                                                    <p className="text-zinc-400 text-sm">AI-generated test based on the video content.</p>
-                                                </div>
-                                                <Award className="w-8 h-8 text-indigo-500" />
-                                            </div>
-                                            <div className="space-y-8">
-                                                <div>
-                                                    <p className="text-sm font-medium mb-4 italic">1. According to the session, what is the primary driver of community retention?</p>
-                                                    <div className="space-y-2">
-                                                        {["Branding", "Direct Interaction", "Engagement Loops", "Content Volume"].map(opt => (
-                                                            <div key={opt} className="p-4 rounded-xl border border-white/10 text-xs font-light hover:bg-white/5 cursor-pointer transition-all">
-                                                                {opt}
+                                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                                            {!quizSubmitted ? (
+                                                <div className="p-8 rounded-[32px] bg-gradient-to-br from-indigo-600/10 to-transparent border border-indigo-500/20">
+                                                    <div className="flex justify-between items-start mb-8">
+                                                        <div>
+                                                            <h3 className="text-xl font-bold mb-2 uppercase tracking-tighter">AI Knowledge Test</h3>
+                                                            <p className="text-zinc-400 text-sm font-light">Validating your understanding of the masterclass.</p>
+                                                        </div>
+                                                        <Award className="w-8 h-8 text-indigo-500" />
+                                                    </div>
+
+                                                    <div className="space-y-8">
+                                                        <div>
+                                                            <p className="text-sm font-medium mb-4 italic">How does the "Anti-Skool" philosophy differ from traditional platforms?</p>
+                                                            <div className="space-y-2">
+                                                                {["Focus on AI automation", "Premium minimalism", "Community-first logic", "All of the above"].map(opt => (
+                                                                    <div key={opt} className="p-4 rounded-xl border border-white/10 text-xs font-light hover:bg-white/5 cursor-pointer transition-all">
+                                                                        {opt}
+                                                                    </div>
+                                                                ))}
                                                             </div>
-                                                        ))}
+                                                        </div>
+                                                        <button
+                                                            onClick={handleQuizSubmit}
+                                                            disabled={submittingQuiz}
+                                                            className="w-full py-4 bg-white text-black rounded-2xl font-bold uppercase text-[10px] tracking-[0.2em] flex items-center justify-center gap-2"
+                                                        >
+                                                            {submittingQuiz ? <Loader2 className="w-4 h-4 animate-spin" /> : "Submit & Send to Creator"}
+                                                        </button>
                                                     </div>
                                                 </div>
-                                                <button className="w-full py-4 bg-white text-black rounded-2xl font-bold uppercase text-[10px] tracking-[0.2em]">
-                                                    Submit Results
-                                                </button>
-                                            </div>
-                                        </div>
+                                            ) : (
+                                                <motion.div
+                                                    initial={{ scale: 0.9, opacity: 0 }}
+                                                    animate={{ scale: 1, opacity: 1 }}
+                                                    className="p-12 rounded-[40px] border border-green-500/30 bg-green-500/5 text-center"
+                                                >
+                                                    <div className="w-16 h-16 rounded-full bg-green-500/10 flex items-center justify-center mx-auto mb-6 text-green-500">
+                                                        <CheckCircle2 className="w-8 h-8" />
+                                                    </div>
+                                                    <h3 className="text-3xl font-bold mb-2">{score}/10</h3>
+                                                    <p className="text-zinc-400 font-light mb-8">Result successfully verified and shared with the community lead.</p>
+                                                    <button
+                                                        onClick={() => setQuizSubmitted(false)}
+                                                        className="text-[10px] uppercase tracking-widest font-bold text-indigo-400 hover:text-white transition-colors"
+                                                    >
+                                                        Retake Test
+                                                    </button>
+                                                </motion.div>
+                                            )}
+                                        </motion.div>
                                     )}
                                 </div>
                             </motion.div>
