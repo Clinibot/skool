@@ -8,15 +8,18 @@ import { Loader2 } from "lucide-react";
 
 export default function OnboardingPage() {
     const [loading, setLoading] = useState<string | null>(null);
+    const [error, setError] = useState<string | null>(null);
     const router = useRouter();
 
     const handleSelect = async (role: 'creator' | 'participant') => {
         setLoading(role);
+        setError(null);
         try {
             await setUserRole(role);
             window.location.href = '/dashboard';
-        } catch (error) {
-            console.error(error);
+        } catch (err: any) {
+            console.error(err);
+            setError(err?.message || JSON.stringify(err));
             setLoading(null);
         }
     };
@@ -39,6 +42,12 @@ export default function OnboardingPage() {
                     </h1>
                     <p className="text-zinc-500 tracking-tight text-lg">Define tu identidad en el futuro de las comunidades.</p>
                 </motion.div>
+
+                {error && (
+                    <div className="mb-8 p-4 rounded-2xl border border-red-500/30 bg-red-500/10 text-red-400 text-sm text-center">
+                        <strong>Error:</strong> {error}
+                    </div>
+                )}
 
                 <div className="grid md:grid-cols-2 gap-8">
                     <RoleCard
