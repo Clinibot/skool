@@ -19,14 +19,17 @@ export function Sidebar({ profile }: { profile: any }) {
 
     const isCreator = profile?.global_role === 'creator';
 
-    const navItems = [
+    const navItems = isCreator ? [
         { icon: <LayoutDashboard className="w-5 h-5" />, label: "El Pasillo", href: "/dashboard" },
         { icon: <GraduationCap className="w-5 h-5" />, label: "Mis Clases", href: "/dashboard/clases" },
-        ...(isCreator ? [
-            { icon: <Bot className="w-5 h-5" />, label: "Profesores IA", href: "/dashboard/profesores-ia" },
-            { icon: <Users className="w-5 h-5" />, label: "Expediente Alumnos", href: "/dashboard/alumnos" },
-            { icon: <Lock className="w-5 h-5" />, label: "Clases Privadas", href: "/dashboard/clases-privadas" },
-        ] : []),
+        { icon: <Bot className="w-5 h-5" />, label: "Profesores IA", href: "/dashboard/profesores-ia" },
+        { icon: <Users className="w-5 h-5" />, label: "Expediente Alumnos", href: "/dashboard/alumnos" },
+        { icon: <Lock className="w-5 h-5" />, label: "Clases Privadas", href: "/dashboard/clases-privadas" },
+        { icon: <Coffee className="w-5 h-5" />, label: "Cafetería", href: "/dashboard/cafeteria" },
+        { icon: <Settings className="w-5 h-5" />, label: "Ajustes", href: "/dashboard/ajustes" },
+    ] : [
+        { icon: <LayoutDashboard className="w-5 h-5" />, label: "Mis Tribus", href: "/dashboard" },
+        { icon: <GraduationCap className="w-5 h-5" />, label: "Mis Clases", href: "/dashboard/clases" },
         { icon: <Coffee className="w-5 h-5" />, label: "Cafetería", href: "/dashboard/cafeteria" },
         { icon: <Settings className="w-5 h-5" />, label: "Ajustes", href: "/dashboard/ajustes" },
     ];
