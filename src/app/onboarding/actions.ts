@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
-import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 export async function setUserRole(role: 'creator' | 'participant') {
     const supabase = await createClient();
@@ -16,6 +16,5 @@ export async function setUserRole(role: 'creator' | 'participant') {
 
     if (error) throw error;
 
-    revalidatePath('/onboarding');
-    return { success: true };
+    redirect('/dashboard');
 }
