@@ -52,3 +52,18 @@ export async function setUserRole(role: 'creator' | 'participant') {
     revalidatePath('/dashboard/ajustes');
     return { success: true };
 }
+
+export async function sendDirectMessage(receiverId: string, content: string) {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error("Unauthorized");
+
+    const { error } = await supabase.from('direct_messages').insert({
+        sender_id: user.id,
+        receiver_id: receiverId,
+        content: content
+    });
+
+    if (error) throw error;
+    return { success: true };
+}
