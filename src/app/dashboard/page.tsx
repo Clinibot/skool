@@ -1,15 +1,16 @@
-import { createClient } from "@/utils/supabase/server";
+import { createClient, createPublicClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { Sidebar } from "@/components/Sidebar";
 import Link from "next/link";
 
 export default async function DashboardPage() {
     const supabase = await createClient();
+    const publicSupabase = await createPublicClient();
     const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) redirect("/login");
 
-    const { data: profileData, error: profileError } = await supabase
+    const { data: profileData, error: profileError } = await publicSupabase
         .rpc('get_my_profile', { uid: user!.id });
 
     if (profileError) {
