@@ -37,3 +37,18 @@ export async function createCommunity(formData: { name: string, slug: string, de
     revalidatePath('/dashboard');
     return { success: true, community };
 }
+
+export async function setUserRole(role: 'creator' | 'participant') {
+    const supabase = await createClient(); // Use createClient for consistent schema if needed, but the RPC is in public
+
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error("Unauthorized");
+
+    const { error } = await supabase.rpc('set_user_role', { uid: user.id, role });
+
+    if (error) throw error;
+
+    revalidatePath('/dashboard');
+    revalidatePath('/dashboard/ajustes');
+    return { success: true };
+}
