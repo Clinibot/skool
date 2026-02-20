@@ -36,7 +36,7 @@ export default function RegisterPage() {
             setLoading(false);
         } else {
             // Since email confirmation is disabled by the user, we can redirect or show success
-            router.push("/login?message=Account created successfully!");
+            router.push("/login?message=¡Cuenta creada con éxito!");
         }
     };
 
@@ -53,13 +53,13 @@ export default function RegisterPage() {
                     <div className="inline-flex w-16 h-16 bg-gradient-to-tr from-violet-600 to-indigo-600 rounded-2xl items-center justify-center shadow-2xl shadow-violet-500/20 mb-6 mx-auto">
                         <Zap className="w-8 h-8 text-white fill-white" />
                     </div>
-                    <h1 className="text-3xl font-bold tracking-tight mb-2">Create your tribe</h1>
-                    <p className="text-zinc-400">Join the community of creators and builders.</p>
+                    <h1 className="text-3xl font-bold tracking-tight mb-2">Crea tu tribu</h1>
+                    <p className="text-zinc-400">Únete a la nueva era de comunidades premium.</p>
                 </div>
 
                 <form onSubmit={handleRegister} className="space-y-4">
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-zinc-300 ml-1">Full Name</label>
+                        <label className="text-sm font-medium text-zinc-300 ml-1">Nombre Completo</label>
                         <div className="relative group">
                             <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500 group-focus-within:text-indigo-500 transition-colors" />
                             <input
@@ -68,13 +68,13 @@ export default function RegisterPage() {
                                 onChange={(e) => setFullName(e.target.value)}
                                 required
                                 className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 outline-none focus:border-indigo-500/50 focus:bg-white/[0.08] transition-all"
-                                placeholder="John Doe"
+                                placeholder="Tu nombre"
                             />
                         </div>
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-zinc-300 ml-1">Email</label>
+                        <label className="text-sm font-medium text-zinc-300 ml-1">Correo Electrónico</label>
                         <div className="relative group">
                             <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500 group-focus-within:text-indigo-500 transition-colors" />
                             <input
@@ -83,13 +83,13 @@ export default function RegisterPage() {
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
                                 className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 outline-none focus:border-indigo-500/50 focus:bg-white/[0.08] transition-all"
-                                placeholder="name@company.com"
+                                placeholder="tu@email.com"
                             />
                         </div>
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-zinc-300 ml-1">Password</label>
+                        <label className="text-sm font-medium text-zinc-300 ml-1">Contraseña</label>
                         <div className="relative group">
                             <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500 group-focus-within:text-indigo-500 transition-colors" />
                             <input
@@ -118,7 +118,7 @@ export default function RegisterPage() {
                             <Loader2 className="w-6 h-6 animate-spin text-black" />
                         ) : (
                             <>
-                                Get Started
+                                Empezar
                                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                             </>
                         )}
@@ -126,9 +126,9 @@ export default function RegisterPage() {
                 </form>
 
                 <p className="text-center mt-8 text-zinc-500 text-sm">
-                    Already have an account?{" "}
+                    ¿Ya tienes una cuenta?{" "}
                     <Link href="/login" className="text-indigo-400 hover:text-indigo-300 font-semibold transition-colors">
-                        Sign In
+                        Iniciar Sesión
                     </Link>
                 </p>
             </motion.div>

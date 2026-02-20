@@ -28,7 +28,7 @@ export function Sidebar({ profile }: { profile: any }) {
         <aside className="w-64 border-r border-white/5 bg-[#0a0a0b]/80 backdrop-blur-xl flex flex-col p-6 fixed h-full z-50">
             <div className="flex items-center gap-2 mb-12">
                 <Zap className="w-6 h-6 text-indigo-500 fill-indigo-500" />
-                <span className="font-bold tracking-tight uppercase text-xs tracking-[0.2em] text-white">Clinibot Skool</span>
+                <span className="font-bold tracking-tight uppercase text-xs tracking-[0.2em] text-white">Saby</span>
             </div>
 
             <nav className="flex-1 space-y-2">
@@ -37,8 +37,8 @@ export function Sidebar({ profile }: { profile: any }) {
                         key={item.href}
                         href={item.href}
                         className={`flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-medium transition-all ${pathname === item.href
-                                ? "bg-white/5 text-white border border-white/10 shadow-lg shadow-white/5"
-                                : "text-zinc-500 hover:text-zinc-300"
+                            ? "bg-white/5 text-white border border-white/10 shadow-lg shadow-white/5"
+                            : "text-zinc-500 hover:text-zinc-300"
                             }`}
                     >
                         {item.icon}
