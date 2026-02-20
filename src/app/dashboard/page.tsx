@@ -51,51 +51,83 @@ export default async function DashboardPage() {
         return (
             <div className="min-h-screen bg-[#0a0a0b] text-white flex">
                 <Sidebar profile={profile} />
-                <main className="flex-1 ml-64 p-12">
-                    <div className="mb-12 flex justify-between items-end">
-                        <div>
-                            <p className="text-[10px] uppercase tracking-[0.3em] text-indigo-400 mb-2">Universidad Saby</p>
-                            <h1 className="text-3xl font-light tracking-wider uppercase">El Pasillo</h1>
-                            <p className="text-zinc-500 mt-1">Gestiona tus aulas y comunidades</p>
-                        </div>
-                        <Link href="/dashboard/clases/nueva" className="px-6 py-2.5 bg-white text-black rounded-xl font-bold text-sm hover:bg-zinc-200 transition-all">
-                            + Nueva Aula
-                        </Link>
-                    </div>
-                    {creatorAulas.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center py-32 text-center">
-                            <div className="text-6xl mb-6">🏫</div>
-                            <h2 className="text-xl font-light text-zinc-400 mb-3">El pasillo está vacío</h2>
-                            <p className="text-zinc-600 text-sm max-w-xs">Crea tu primera aula para empezar a compartir conocimiento.</p>
-                            <Link href="/dashboard/clases/nueva" className="mt-6 px-6 py-2.5 bg-indigo-600 text-white rounded-xl font-bold text-sm hover:bg-indigo-500 transition-all">
-                                Crear primera aula
+                <main className="flex-1 ml-64 p-12 relative overflow-hidden">
+                    {/* Decorative items */}
+                    <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-600/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2" />
+                    <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-violet-600/5 blur-[120px] rounded-full translate-y-1/2 -translate-x-1/2" />
+
+                    <div className="relative z-10 max-w-7xl mx-auto">
+                        <div className="mb-16 flex justify-between items-end">
+                            <div>
+                                <div className="flex items-center gap-2 mb-3">
+                                    <div className="h-[1px] w-8 bg-indigo-500/50" />
+                                    <p className="text-[10px] uppercase tracking-[0.4em] text-indigo-400 font-bold">Universidad Saby</p>
+                                </div>
+                                <h1 className="text-4xl font-extralight tracking-tight uppercase">
+                                    El <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-white/40">Pasillo</span>
+                                </h1>
+                                <p className="text-zinc-500 mt-2 text-sm font-light">Gestiona tus aulas virtuales y comunidades académicas</p>
+                            </div>
+                            <Link href="/dashboard/clases/nueva"
+                                className="group relative px-8 py-3 bg-white text-black rounded-2xl font-bold text-sm hover:scale-105 transition-all duration-500 overflow-hidden">
+                                <span className="relative z-10 flex items-center gap-2">
+                                    <span className="text-lg">+</span> Nueva Aula
+                                </span>
+                                <div className="absolute inset-0 bg-gradient-to-r from-indigo-100 to-white opacity-0 group-hover:opacity-100 transition-opacity" />
                             </Link>
                         </div>
-                    ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {creatorAulas.map((aula: any) => (
-                                <Link key={aula.id} href={`/dashboard/clases/${aula.id}`}>
-                                    <div className="relative h-64 rounded-[28px] border border-white/5 bg-white/[0.02] p-8 group hover:border-indigo-500/40 transition-all cursor-pointer overflow-hidden">
-                                        <div className={`absolute top-0 right-0 w-40 h-40 blur-[60px] -translate-y-1/2 translate-x-1/2 transition-colors ${aula.is_active ? 'bg-indigo-500/30' : 'bg-white/5 group-hover:bg-indigo-500/15'}`} />
-                                        {aula.is_active && (
-                                            <div className="absolute top-5 right-5 flex items-center gap-1.5">
-                                                <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                                                <span className="text-[9px] uppercase tracking-widest text-green-400 font-bold">En vivo</span>
-                                            </div>
-                                        )}
-                                        <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mb-5 font-bold text-indigo-400 text-lg">
-                                            {aula.nombre.charAt(0).toUpperCase()}
-                                        </div>
-                                        <h3 className="text-lg font-bold mb-2 uppercase tracking-tight">{aula.nombre}</h3>
-                                        <p className="text-zinc-500 text-sm line-clamp-2">{aula.descripcion || 'Sin descripción'}</p>
-                                        <div className="absolute bottom-6 left-8">
-                                            <span className="text-[9px] uppercase tracking-[0.25em] text-zinc-600">Entrar →</span>
-                                        </div>
-                                    </div>
+
+                        {creatorAulas.length === 0 ? (
+                            <div className="flex flex-col items-center justify-center py-40 text-center relative">
+                                <div className="relative mb-8">
+                                    <div className="text-7xl relative z-10 grayscale opacity-40 hover:grayscale-0 hover:opacity-100 transition-all duration-700 cursor-default">🏫</div>
+                                    <div className="absolute inset-0 bg-indigo-500/20 blur-3xl rounded-full" />
+                                </div>
+                                <h2 className="text-2xl font-light text-zinc-300 mb-4 tracking-tight">Tu pasillo universitario está en silencio</h2>
+                                <p className="text-zinc-500 text-sm max-w-xs leading-relaxed font-light">
+                                    Comienza tu legado educativo creando la primera aula para tu comunidad.
+                                </p>
+                                <Link href="/dashboard/clases/nueva"
+                                    className="mt-10 px-8 py-3.5 bg-indigo-600/10 border border-indigo-500/20 text-indigo-400 rounded-2xl font-bold text-sm hover:bg-indigo-600 hover:text-white transition-all duration-500">
+                                    Fundar Aula
                                 </Link>
-                            ))}
-                        </div>
-                    )}
+                            </div>
+                        ) : (
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                {creatorAulas.map((aula: any) => (
+                                    <Link key={aula.id} href={`/dashboard/clases/${aula.id}`}>
+                                        <div className="relative h-72 rounded-[40px] border border-white/5 bg-white/[0.02] p-10 group hover:border-indigo-500/40 hover:bg-white/[0.04] transition-all duration-700 cursor-pointer overflow-hidden backdrop-blur-sm">
+                                            {/* Glow effect */}
+                                            <div className={`absolute top-0 right-0 w-48 h-48 blur-[80px] -translate-y-1/2 translate-x-1/2 transition-all duration-700 ${aula.is_active ? 'bg-indigo-500/40 opacity-100' : 'bg-indigo-500/5 opacity-0 group-hover:opacity-100 group-hover:bg-indigo-500/20'}`} />
+
+                                            {/* Status Badge */}
+                                            {aula.is_active && (
+                                                <div className="absolute top-6 right-8 flex items-center gap-2 px-3 py-1 bg-green-500/10 border border-green-500/20 rounded-full">
+                                                    <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse shadow-[0_0_8px_rgba(74,222,128,0.5)]" />
+                                                    <span className="text-[10px] uppercase tracking-widest text-green-400 font-black">En vivo</span>
+                                                </div>
+                                            )}
+
+                                            {/* Icon/Logo */}
+                                            <div className="w-16 h-16 rounded-[24px] bg-gradient-to-br from-indigo-500/10 to-violet-500/5 border border-white/10 flex items-center justify-center mb-8 font-black text-white text-2xl group-hover:scale-110 group-hover:border-indigo-500/30 transition-all duration-700 shadow-2xl">
+                                                {aula.nombre.charAt(0).toUpperCase()}
+                                            </div>
+
+                                            <div className="space-y-3">
+                                                <h3 className="text-xl font-bold uppercase tracking-tight group-hover:text-indigo-300 transition-colors duration-500">{aula.nombre}</h3>
+                                                <p className="text-zinc-500 text-sm font-light leading-relaxed line-clamp-2">{aula.descripcion || 'Sin descripción académica definida.'}</p>
+                                            </div>
+
+                                            <div className="absolute bottom-10 left-10 flex items-center gap-2 opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all duration-700">
+                                                <span className="text-[10px] uppercase tracking-[0.4em] text-indigo-400 font-bold">Entrar en el aula</span>
+                                                <span className="text-indigo-400">→</span>
+                                            </div>
+                                        </div>
+                                    </Link>
+                                ))}
+                            </div>
+                        )}
+                    </div>
                 </main>
             </div>
         );
