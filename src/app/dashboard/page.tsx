@@ -9,12 +9,14 @@ export default async function DashboardPage() {
 
     if (!user) redirect("/login");
 
-    const { data: profile } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', user.id)
-        .single();
+    const { data: profileData, error: profileError } = await supabase
+        .rpc('get_my_profile', { uid: user!.id });
 
+    if (profileError) {
+        console.error('[dashboard] get_my_profile error:', profileError);
+    }
+
+    const profile = profileData?.[0] ?? null;
     if (!profile?.global_role) redirect("/onboarding");
 
     // Fetch communities

@@ -8,10 +8,8 @@ export async function setUserRole(role: 'creator' | 'participant') {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error("Unauthorized");
 
-    const { error } = await supabase
-        .from('profiles')
-        .update({ global_role: role })
-        .eq('id', user.id);
+    // Use the public schema RPC (SECURITY DEFINER) — avoids PostgREST schema issues
+    const { error } = await supabase.rpc('set_user_role', { uid: user.id, role });
 
     if (error) throw error;
 
