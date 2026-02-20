@@ -35,23 +35,23 @@ export default function OnboardingPage() {
                     className="text-center mb-16"
                 >
                     <h1 className="text-4xl md:text-5xl font-light tracking-widest mb-4 uppercase">
-                        Choose your <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-violet-400">Path</span>
+                        Elige tu <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-violet-400">Camino</span>
                     </h1>
-                    <p className="text-zinc-500 tracking-tight text-lg">Define your identity in the future of communities.</p>
+                    <p className="text-zinc-500 tracking-tight text-lg">Define tu identidad en el futuro de las comunidades.</p>
                 </motion.div>
 
                 <div className="grid md:grid-cols-2 gap-8">
                     <RoleCard
-                        title="Creator"
-                        description="Build your tribe, share your knowledge, and lead the conversation."
+                        title="Creador"
+                        description="Construye tu tribu, comparte tu conocimiento y lidera la conversación."
                         onClick={() => handleSelect('creator')}
                         isLoading={loading === 'creator'}
                         gradient="from-indigo-600/20 to-indigo-400/5"
                         borderColor="border-indigo-500/30"
                     />
                     <RoleCard
-                        title="Participant"
-                        description="Join communities, learn from experts, and grow with your peers."
+                        title="Participante"
+                        description="Únete a comunidades, aprende de expertos y crece con tus compañeros."
                         onClick={() => handleSelect('participant')}
                         isLoading={loading === 'participant'}
                         gradient="from-violet-600/20 to-violet-400/5"
@@ -88,7 +88,7 @@ function RoleCard({ title, description, onClick, isLoading, gradient, borderColo
                         <Loader2 className="w-5 h-5 animate-spin text-white" />
                     ) : (
                         <span className="text-[10px] uppercase tracking-[0.3em] font-bold opacity-0 group-hover:opacity-100 transition-opacity">
-                            Select Identity
+                            Seleccionar Identidad
                         </span>
                     )}
                 </div>
